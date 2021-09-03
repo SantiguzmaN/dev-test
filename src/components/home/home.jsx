@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { validarSerial } from '../../actions/actions';
 
 const Home = () => {
 
@@ -17,6 +18,18 @@ const Home = () => {
     e.preventDefault();
   };
 
+  const validar = () => {
+    validarSerial(serialEquipo).then((data) => {
+      if (data === 'no existe'){
+        alert('el serial ingresado no se encuentra registrado en nuestros equipos');
+      } else if (data === 'dueño'){
+        alert('Ya se encuentra registrado a nombre de otro usuario');
+      } else if(data === 'registrar') {
+        setBiddenItems(false);
+      }
+    });
+  };
+
   return (
     <div className="row">
       <div className="col-12">
@@ -33,7 +46,7 @@ const Home = () => {
               <div className="col-3">
                 <p className="mt-1">Serial del equipo</p>
               </div>
-              <div className="col-9">
+              <div className="col-8">
                 <input
                   type="input"
                   className="form-control mb-1"
@@ -42,6 +55,11 @@ const Home = () => {
                   value={serialEquipo}
                   onChange={e => setSerialEquipo(e.target.value)}
                 />
+              </div>
+              <div className="col-1">
+                <button className="btn btn-info btn-block" onClick={() => validar()}>
+                  Validar
+                </button>
               </div>
             </div>
             <div className="row" hidden={hiddenItems}>
