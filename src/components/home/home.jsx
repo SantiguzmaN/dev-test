@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { validarSerial } from '../../actions/actions';
+import { validarSerial, registroDotacion } from '../../actions/actions';
 
 const Home = () => {
 
@@ -10,22 +10,46 @@ const Home = () => {
   const [nombrePropietario, setNombrePropietario] = useState('');
   const [mailPropietario, setMailPropietario] = useState('');
   const [fechaAsignacion, setFechaAsignacion] = useState('');
-  const [hiddenItems, setBiddenItems] = useState(true);
+  const [hiddenItems, setHiddenItems] = useState(true);
 
 
 
   const handleEditSubmit = (e) => {
     e.preventDefault();
+    const body = {
+      serialEquipo,
+      nombreEquipo,
+      tipo,
+      sistemaOperativo,
+      nombrePropietario,
+      mailPropietario,
+      fechaAsignacion
+    };
+    registroDotacion(body).then((data) => {
+      console.log('response', data);
+      if (data.message === 'elemento agregado'){
+        alert('La dotacion fue asignada con exito');
+        setSerialEquipo('');
+        setNombreEquipo('');
+        setTipo('');
+        setSistemaOperativo('');
+        setNombrePropietario('');
+        setMailPropietario('');
+        setFechaAsignacion('');
+        setHiddenItems(true);
+      }
+    });
   };
 
-  const validar = () => {
+  const validar = (e) => {
+    e.preventDefault();
     validarSerial(serialEquipo).then((data) => {
       if (data === 'no existe'){
         alert('el serial ingresado no se encuentra registrado en nuestros equipos');
       } else if (data === 'dueño'){
         alert('Ya se encuentra registrado a nombre de otro usuario');
       } else if(data === 'registrar') {
-        setBiddenItems(false);
+        setHiddenItems(false);
       }
     });
   };
@@ -37,7 +61,7 @@ const Home = () => {
           <form
             className="text-center border w-50 p-5"
             data-testid="login-form"
-            onSubmit={handleEditSubmit}
+            onSubmit={e => handleEditSubmit(e)}
           >
             <h2 className="w-100">
               Registro de dotacion
@@ -57,7 +81,7 @@ const Home = () => {
                 />
               </div>
               <div className="col-1">
-                <button className="btn btn-info btn-block" onClick={() => validar()}>
+                <button className="btn btn-info btn-block" onClick={e => validar(e)}>
                   Validar
                 </button>
               </div>
