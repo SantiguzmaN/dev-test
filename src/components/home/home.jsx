@@ -26,7 +26,6 @@ const Home = () => {
       fechaAsignacion
     };
     registroDotacion(body).then((data) => {
-      console.log('response', data);
       if (data.message === 'elemento agregado'){
         alert('La dotacion fue asignada con exito');
         setSerialEquipo('');
@@ -150,7 +149,7 @@ const Home = () => {
               </div>
               <div className="col-9">
                 <input
-                  type="input"
+                  type="email"
                   className="form-control mb-1"
                   name="mailPropietario"
                   placeholder="Email del propietario"
